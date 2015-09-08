@@ -18,10 +18,12 @@ public class GridView : MonoBehaviour {
 
     Mesh gridMesh;
 
+    MeshFilter meshFilter;
+
     // Use this for initialization
     void Start()
     {
-        init();
+        updateInfo();
     }
 
     // Update is called once per frame
@@ -33,24 +35,17 @@ public class GridView : MonoBehaviour {
 #if UNITY_EDITOR
     protected void OnValidate()
     {
-        init();
+        updateInfo();
     }
 #endif
 
 
-    public void init()
+    public void updateInfo()
     {
 
         model = cachedGameObject.GetComponent<GridModel>();
         if (null == model)
             model = cachedGameObject.AddComponent<GridModel>();
-
-        MeshFilter meshFilter = cachedGameObject.GetComponent<MeshFilter>();
-
-        if (null == meshFilter)
-            meshFilter = cachedGameObject.AddComponent<MeshFilter>();
-
-        gridMesh = meshFilter.sharedMesh;
 
         if (null == cachedGameObject.GetComponent<MeshRenderer>())
             cachedGameObject.AddComponent<MeshRenderer>();
@@ -70,7 +65,7 @@ public class GridView : MonoBehaviour {
         for(int i = 0; i < row; i++)
             for(int j = 0; j < column; j++)
             {
-                if (1 == GridModel.grid[i, j])
+                if ((byte)GridModel.NodeState.Open != model.getTargetGrid(i, j))
                     cubeCount++;
             }
         
@@ -102,16 +97,26 @@ public class GridView : MonoBehaviour {
         for (int i = 0; i < row; i++)
             for (int j = 0; j < column; j++)
             {
-                if (1 == GridModel.grid[i, j])
+                byte nodeData = model.getTargetGrid(i, j);
+                if ((byte)GridModel.NodeState.Open != nodeData)
                 {
-                    drawCube(ref meshData, GridModel.gridArray[i,j].centerPosition, cubeSize);
+                    Color color = Color.red;
+                    if ((byte)GridModel.NodeState.DrawPath == nodeData)
+                        color = Color.green;
+                    drawCube(ref meshData, model.getGridCenterPos(i,j), cubeSize, color);
                 }
             }
 
+        gridMesh = new Mesh();
         gridMesh.triangles = null;
         gridMesh.vertices = meshData.vertices;
         gridMesh.colors = meshData.colors;
         gridMesh.SetTriangles(meshData.triangles, 0);
+
+        meshFilter = cachedGameObject.GetComponent<MeshFilter>();
+        if (null == meshFilter)
+            meshFilter = cachedGameObject.AddComponent<MeshFilter>();
+        meshFilter.mesh = gridMesh;
     }
 
     public void drawLine(ref DrawMeshData meshData, Vector3 beginPoint, Vector3 endPoint, float lineHalfWidth, Vector3 zDir)
@@ -151,10 +156,8 @@ public class GridView : MonoBehaviour {
         meshData.triangles[meshData.triIndex++] = tlIndex;
     }
 
-    public void drawCube(ref DrawMeshData meshData, Vector3 center, Vector3 size)
+    public void drawCube(ref DrawMeshData meshData, Vector3 center, Vector3 size, Color color)
     {
-        Color color = Color.red;
-
         Vector3[] dir = new Vector3[8] 
         { 
             //left-bottom-front
@@ -188,22 +191,23 @@ public class GridView : MonoBehaviour {
 
         int[,] triangles = new int[12, 3] 
         { 
+            
             //left
             {0,4,7},
             {7,3,0},
-                             
+                       
             //right          
             {6,5,1},
             {1,2,6},
-                             
+                   
             //bottom         
             {2,1,0},
-            {0,3,5},
-                             
+            {0,3,2},
+               
             //top            
             {4,5,6},
             {6,7,4},
-                             
+                 
             //back           
             {7,6,2},
             {2,3,7},
@@ -211,9 +215,10 @@ public class GridView : MonoBehaviour {
             //front
             {5,4,0},
             {0,1,5}
+                          
         };
-
-        for (int i = 0; i < 11; i++)
+        
+        for (int i = 0; i < 12; i++)
             for (int j = 0; j < 3; j++)
             {
                 meshData.triangles[meshData.triIndex++] = indexs[triangles[i, j]];

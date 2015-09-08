@@ -29,7 +29,7 @@ public class GridControllerEditor : Editor
         {
             Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
             RaycastHit hit;
-            bool ok = Physics.Raycast(ray, out hit, 1000, GenericHelper.GetLayerMask("Default"));
+            bool ok = Physics.Raycast(ray, out hit, 1000, GenericHelper.GetLayerMask("Ignore Raycast"));
             if (ok)
             {
                 mController.setBlock(hit.point, mState % 2);
