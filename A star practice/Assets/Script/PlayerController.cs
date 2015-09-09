@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour {
         pathFinder = new PathFinder(gridModel);
     }
 
-    void Update()
+    void LateUpdate()
     {
 
         if(Input.GetMouseButtonDown(0))
@@ -48,5 +48,7 @@ public class PlayerController : MonoBehaviour {
 
         cachedTransform.position = Vector3.MoveTowards(cachedTransform.position, mDestination, speed * Time.deltaTime);
     }
+
+
 
 }

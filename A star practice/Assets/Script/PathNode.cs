@@ -64,3 +64,11 @@ public struct PathNodeFast {
     public byte Status;
 
 }
+
+
+public class NodeState
+{
+    public const byte Open = 0;
+    public const byte Block = 1;
+    public const byte DrawPath = 2;
+}

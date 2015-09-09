@@ -65,7 +65,7 @@ public class GridView : MonoBehaviour {
         for(int i = 0; i < row; i++)
             for(int j = 0; j < column; j++)
             {
-                if ((byte)GridModel.NodeState.Open != model.getTargetGrid(i, j))
+                if (NodeState.Open != model.getTargetGrid(i, j))
                     cubeCount++;
             }
         
@@ -92,16 +92,14 @@ public class GridView : MonoBehaviour {
         }
 
         //draw block cube
-        //drawCube(ref meshData, new Vector3(0.5f, 0, 0.5f), cubeSize);
-
         for (int i = 0; i < row; i++)
             for (int j = 0; j < column; j++)
             {
                 byte nodeData = model.getTargetGrid(i, j);
-                if ((byte)GridModel.NodeState.Open != nodeData)
+                if (NodeState.Open != nodeData)
                 {
                     Color color = Color.red;
-                    if ((byte)GridModel.NodeState.DrawPath == nodeData)
+                    if (NodeState.DrawPath == nodeData)
                         color = Color.green;
                     drawCube(ref meshData, model.getGridCenterPos(i,j), cubeSize, color);
                 }

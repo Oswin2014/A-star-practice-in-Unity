@@ -36,7 +36,7 @@ PathFinder
 		------??? target = CheckDenstination(origin, target);
 	}
 }
-
+100
 --advantage:
 >before find, check start equal target
 >self block and dynamic entity block
@@ -63,9 +63,10 @@ PathFinder
 --A* algorithm                                      -||||||
 ----basic algorithm                                 -OVER
 ----show path in grid area                          -OVER
-----scene camera controll                           ------
-----sometime throw exception                        -
+----scene camera controll                           -OVER
+----sometime throw exception                        -OVER
 ----optimize algorithm                              -
+--optimize camera wheel drag                        -OVER
 >expand
 --multiple player move and elude
 >optimize(according to path result)

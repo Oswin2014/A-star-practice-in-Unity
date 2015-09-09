@@ -49,8 +49,9 @@ public class PathFinder {
         mGridXBitWide = (ushort)(Math.Log(mGridX - 1, 2) + 1);
         mGridXMinus = (ushort)( Math.Pow(2, mGridXBitWide) - 1);
         
-        int area = mGridX * mGridY;
-        int size = ( (mGridY - 1) << mGridXBitWide ) + (mGridX - 1);
+        int maxIndex = ( (mGridY - 1) << mGridXBitWide ) + (mGridX - 1);
+        //0 - maxIndex
+        int size = maxIndex + 1;
         if (null == mCalcGrid || mCalcGrid.Length != (size))
             mCalcGrid = new PathNodeFast[size];
 
@@ -119,15 +120,21 @@ public class PathFinder {
 
                     newLocation = (newLocationY << mGridXBitWide) + newLocationX;
 
-                    if (newLocationX > mGridX || newLocationY >= mGridY)
+                    if (newLocationX >= mGridX || newLocationY >= mGridY)
                         continue;
 
-                    if (mModel.getTargetGrid(newLocationX, newLocationY) == 1)
+                    //Debug.Log("newLocationX: " + newLocationX + " newLocationY: " + newLocationY);
+                    if (mModel.getTargetGrid(newLocationX, newLocationY) == NodeState.Block)
                         continue;
 
                     newG = curNode.G + 1;
                     if (mHeavyDiagonals && i > 3)
                         newG += 0.41f;
+
+                    //if(newLocation >= mCalcGrid.Length)
+                    //{
+                    //    Debug.Log("newLocation: " + newLocation);
+                    //}
 
                     PathNodeFast newNode = mCalcGrid[newLocation];
 

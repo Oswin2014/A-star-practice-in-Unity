@@ -7,12 +7,6 @@ using UnityEngine.UI;
 public class GridModel : MonoBehaviour
 {
 
-    public enum NodeState
-    {
-        Open,
-        Block,
-        DrawPath,
-    }
     
 #if UNITY_EDITOR
 
@@ -27,6 +21,8 @@ public class GridModel : MonoBehaviour
 
     [SerializeField]
     List<byte> gridList = new List<byte>();
+
+    List<int> drawPathList = new List<int>();
 
     protected GameObject mGo;
     protected Transform mTrans;
@@ -56,6 +52,14 @@ public class GridModel : MonoBehaviour
         //    }
     }
 
+    void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            clearDrawPath();
+        }
+    }
+
 #if UNITY_EDITOR
     protected void OnValidate()
     {
@@ -68,21 +72,30 @@ public class GridModel : MonoBehaviour
         view.updateInfo();
     }
 
+    void clearDrawPath()
+    {
+        for (int i = 0, max = drawPathList.Count; i < max; i++)
+        {
+            gridList[drawPathList[i]] = NodeState.Open;
+        }
+        drawPathList.Clear();
+    }
+
     public void drawPath(List<PathNode> pathList)
     {
-        byte drawFlag = (byte)NodeState.DrawPath;
-        byte openFlag = (byte)NodeState.Open;
-        for(int i = 0, max = gridList.Count; i < max; i++)
-        {
-            if (gridList[i] == drawFlag)
-                gridList[i] = openFlag;
-        }
-
+        
         PathNode node;
+        int index = 0;
         for(int i = 0, max = pathList.Count; i < max; i++)
         {
             node = pathList[i];
-            gridList[node.X * column + node.Y] = drawFlag;
+            index = node.X * column + node.Y;
+            byte nodeDate = gridList[index];
+            if (nodeDate != NodeState.Block && nodeDate != NodeState.DrawPath)
+            {
+                gridList[index] = NodeState.DrawPath;
+                drawPathList.Add(index);
+            }
         }
 
         view.updateInfo();
