@@ -192,11 +192,14 @@ public class PathFinder {
                 }while(true);
 
                 mClose.Add(fNode);
-            }
 
 #if UNITY_EDITOR
-            mModel.drawPath(mClose);
+                mModel.drawPath(mClose);
 #endif
+
+                mStopped = true;
+                return mClose;
+            }
 
             mStopped = true;
             return null;

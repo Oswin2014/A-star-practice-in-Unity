@@ -67,6 +67,8 @@ PathFinder
 ----sometime throw exception                        -OVER
 ----optimize algorithm                              -
 --optimize camera wheel drag                        -OVER
+--multiple player controll and path draw            -OVER
+--player move at path                               -OVER
 >expand
 --multiple player move and elude
 >optimize(according to path result)

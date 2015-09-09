@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GridView : MonoBehaviour {
@@ -20,6 +22,16 @@ public class GridView : MonoBehaviour {
 
     MeshFilter meshFilter;
 
+    GameObject mUIRootObj;
+
+    Text mPathFinderCostTime;
+
+    void Awake()
+    {
+        mUIRootObj = GameObject.Find("UIRoot");
+        mPathFinderCostTime = GenericHelper.FindChildByName(mUIRootObj, "PathFinderCost").GetComponent<Text>();
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -39,19 +51,6 @@ public class GridView : MonoBehaviour {
     }
 #endif
 
-
-    public void updateInfo()
-    {
-
-        model = cachedGameObject.GetComponent<GridModel>();
-        if (null == model)
-            model = cachedGameObject.AddComponent<GridModel>();
-
-        if (null == cachedGameObject.GetComponent<MeshRenderer>())
-            cachedGameObject.AddComponent<MeshRenderer>();
-
-        drawGrid();
-    }
 
     public void drawGrid()
     {
@@ -223,5 +222,22 @@ public class GridView : MonoBehaviour {
             }
     }
 
+    public void updateInfo()
+    {
+
+        model = cachedGameObject.GetComponent<GridModel>();
+        if (null == model)
+            model = cachedGameObject.AddComponent<GridModel>();
+
+        if (null == cachedGameObject.GetComponent<MeshRenderer>())
+            cachedGameObject.AddComponent<MeshRenderer>();
+
+        drawGrid();
+    }
+
+    public void updatePathFinderCost(long costTime)
+    {
+        mPathFinderCostTime.text = costTime.ToString() + " ms";
+    }
 
 }

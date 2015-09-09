@@ -10,7 +10,7 @@ public class GridModel : MonoBehaviour
     
 #if UNITY_EDITOR
 
-    GridView view;
+    public GridView view;
 #endif
 
     //[SerializeField]
@@ -139,7 +139,7 @@ public class GridModel : MonoBehaviour
         pos.x = x * quadSize + quadSize * 0.5f;
         pos.z = z * quadSize + quadSize * 0.5f;
 
-        return pos;
+        return cachedTransform.localToWorldMatrix.MultiplyPoint(pos);
     }
 
     public Point getXZ(Vector3 pos)
