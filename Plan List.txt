@@ -1,0 +1,74 @@
+
+--A* algorithm-----------------------------
+>>Implement process
+--Note key point
+--design self pseudocode
+--understand two sample
+--summarize
+
+>>understand ÇÀÌ²µÇÂ½ÍÅ A*:
+
+PathFinderFast
+{
+	FindPath()
+	{
+		------??? mLocation = (start.Y << mGridYLog2) + start.X;
+		//write error, "mGridYLog2" change to "mGridXLog2"
+	}
+}
+
+--advantage:
+>stop toggle
+>location(x&y) assemple to one variable
+>status and tree structure
+>heap structure store opening node
+>searchLimit
+>check neighbor with direction vector
+>heavy diagonal
+
+
+>>understand Card2 A*:
+
+PathFinder
+{
+	BuildPath()
+	{
+		------??? target = CheckDenstination(origin, target);
+	}
+}
+
+--advantage:
+>before find, check start equal target
+>self block and dynamic entity block
+>follow state
+>find fail, get nearest
+>optimize: skip node that no block node around it
+
+--------------------------------
+
+>>Design self A*									-||||||
+>create repository in GitHub                        -OVER
+>grid editor                                        -||||||
+--draw grid and node                                -||||||
+----understand Card2 grid and 1911 grid             -OVER
+----design                                          -OVER
+----implement                                       -OVER
+--store to grid[,]                                  -OVER
+>player in grid                                     -OVER
+--position and move target                          -OVER
+--state(move/idle) animation                        -Give up
+>path finder                                        -||||||
+--node class                                        -OVER
+--heap store                                        -OVER
+--A* algorithm                                      -||||||
+----basic algorithm                                 -OVER
+----show path in grid area                          -OVER
+----scene camera controll                           ------
+----sometime throw exception                        -
+----optimize algorithm                              -
+>expand
+--multiple player move and elude
+>optimize(according to path result)
+--skip node that no block node around it
+
+-----------------------------------------
