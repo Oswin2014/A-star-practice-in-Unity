@@ -46,12 +46,13 @@ public struct Point
 
 public enum HeuristicFormula
 {
-    Manhattan = 1,
-    MaxDXDY = 2,
-    DiagonalShortCut = 3,
-    Euclidean = 4,
-    EuclideanNoSQR = 5,
-    Custom1 = 6
+    Manhattan,
+    MaxDXDY,
+    DiagonalShortCut,
+    Euclidean,
+    EuclideanWithG,
+    EuclideanNoSQR,
+    Custom1
 }
 
 public struct PathNode
@@ -81,4 +82,5 @@ public class NodeState
     public const byte Open = 0;
     public const byte Block = 1;
     public const byte DrawPath = 2;
+    public const byte DrawCalc = 3;
 }

@@ -65,14 +65,14 @@ PathFinder
 ----show path in grid area                          -OVER
 ----scene camera controll                           -OVER
 ----sometime throw exception                        -OVER
-----optimize algorithm                              -
-----draw calculated grid                            ------
+----add algorithm                              		-OVER
+----draw calculated grid                            -OVER
 --optimize camera wheel drag                        -OVER
 --multiple player controll and path draw            -OVER
 --player move at path                               -OVER
->expand
---multiple player move and elude
->optimize(according to path result)
---skip node that no block node around it
+>expand                                             -Now not use A*
+--multiple player move and elude                    -Now not use A*
+>optimize(according to path result)                 -Now not use A*
+--skip node that no block node around it            -Now not use A*
 
 -----------------------------------------

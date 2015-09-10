@@ -1,4 +1,5 @@
 ﻿
+
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -100,6 +101,9 @@ public class GridView : MonoBehaviour {
                     Color color = Color.red;
                     if (NodeState.DrawPath == nodeData)
                         color = Color.green;
+                    else if (NodeState.DrawCalc == nodeData)
+                        color = Color.blue;
+
                     drawCube(ref meshData, model.getGridCenterPos(i,j), cubeSize, color);
                 }
             }

@@ -1,5 +1,7 @@
 ﻿
-//#define DIAGNOSTIC
+#define Draw_Calc_Node
+
+//#define Diagnostic
 
 using UnityEngine;
 using System;
@@ -34,7 +36,10 @@ public class PathFinder {
     byte mOpenNodeValue = 1;
     byte mCloseNodeValue = 2;
 
-    HeuristicFormula mFormula = HeuristicFormula.Manhattan;
+    public HeuristicFormula formula = HeuristicFormula.Manhattan;
+
+    public bool tieBreaker = false;
+    public bool punishChangeDirection = false;
 
     bool mFound;
     bool mStop;
@@ -61,14 +66,27 @@ public class PathFinder {
         mOpen = new HeapTree(mCalcGrid);
     }
 
-    public List<PathNode> FindPath(Vector3 startPos, Vector3 endPos)
+    public List<PathNode> FindPath(Vector3 startPos, Vector3 endPos
+#if Draw_Calc_Node
+        , ref Dictionary<int, PathNode> calcNodeDic
+#endif
+        )
     {
         lock(this)
         {
 
-#if DIAGNOSTIC
+#if Diagnostic
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
+#endif
+
+#if Draw_Calc_Node
+            calcNodeDic.Clear();
+            PathNode calcNode;
+            calcNode.F = 0;
+            calcNode.G = 0;
+            calcNode.PX = 0;
+            calcNode.PY = 0;
 #endif
 
             mFound = false;
@@ -97,11 +115,11 @@ public class PathFinder {
             mOpen.push(mLocation);
 
             ushort locationX = 0, locationY = 0, newLocationX = 0, newLocationY = 0;
-            int newLocation = 0;
+            int newLocation = 0, horiz = 0;
             float newG = 0, heuristic = 0;
 
             
-#if DIAGNOSTIC
+#if Diagnostic
             sw.Stop();
             Debug.Log(sw.ElapsedTicks / 10000.0f);
 
@@ -130,6 +148,8 @@ public class PathFinder {
                 //search time limit?
 
                 //punish change direction?
+                if (punishChangeDirection)
+                    horiz = locationX - mCalcGrid[mLocation].PX;
 
                 for(int i = 0; i < 8; i++)
                 {
@@ -148,6 +168,20 @@ public class PathFinder {
                     newG = curNode.G + 1;
                     if (mHeavyDiagonals && i > 3)
                         newG += 0.41f;
+
+                    if(punishChangeDirection)
+                    {
+                        if( (newLocationX - locationX) != 0 )
+                        {
+                            if(0 == horiz)
+                                newG += Math.Abs(newLocationX - end.x) + Math.Abs(newLocationY - end.y);
+                        }
+                        if( 0 != (newLocationY - locationY) )
+                        {
+                            if(0 != horiz)
+                                newG += Math.Abs(newLocationX - end.x) + Math.Abs(newLocationY - end.y);
+                        }
+                    }
 
                     //if(newLocation >= mCalcGrid.Length)
                     //{
@@ -168,7 +202,7 @@ public class PathFinder {
                     mCalcGrid[newLocation].G = newG;
 
                     
-                    switch(mFormula)
+                    switch(formula)
                     {
                         case HeuristicFormula.Manhattan:
                             heuristic = Math.Abs(newLocationX - end.x) + Math.Abs(newLocationY - end.y);
@@ -177,16 +211,56 @@ public class PathFinder {
                             heuristic = Math.Max(Math.Abs(newLocationX - end.x), Math.Abs(newLocationY - end.y));
                             break;
                         case HeuristicFormula.DiagonalShortCut:
+                            {
+                                int xDist = Math.Abs(newLocationX - end.x);
+                                int yDist = Math.Abs(newLocationY - end.y);
+                                if(xDist > yDist)
+                                    heuristic = 1.4f * yDist + (xDist - yDist);
+                                else
+                                    heuristic = 1.4f * xDist + (yDist - xDist);
+                            }
                             break;
                         case HeuristicFormula.Euclidean:
+                            heuristic = Mathf.Sqrt( Mathf.Pow(Math.Abs(newLocationX - end.x), 2) + Mathf.Pow(Math.Abs(newLocationY - end.y), 2) );
+                            break;
+                        case HeuristicFormula.EuclideanWithG:
+                            heuristic = Mathf.Sqrt(Mathf.Pow(Math.Abs(newLocationX - end.x), 2) + Mathf.Pow(Math.Abs(newLocationY - end.y), 2));
+                            newG *= newG;
                             break;
                         case HeuristicFormula.EuclideanNoSQR:
+                            heuristic = Mathf.Pow(Math.Abs(newLocationX - end.x), 2) + Mathf.Pow(Math.Abs(newLocationY - end.y), 2);
                             break;
                         case HeuristicFormula.Custom1:
+                            {
+                                int xDist = Math.Abs(newLocationX - end.x);
+                                int yDist = Math.Abs(newLocationY - end.y);
+                                int Orthogonal = Math.Abs(xDist - yDist);
+                                int Diagonal = Math.Abs( ( (xDist + yDist) - Orthogonal ) / 2 );
+                                heuristic = Diagonal + Orthogonal + xDist + yDist;
+                            }
                             break;
                     }
 
+                    if(tieBreaker)
+                    {
+                        int dx1 = locationX - end.x;
+                        int dy1 = locationY - end.y;
+                        int dx2 = start.x - end.x;
+                        int dy2 = start.y - end.y;
+                        int cross = Math.Abs(dx1 * dy2 - dx2 * dy1);
+                        heuristic += cross * 0.001f;
+                    }
+
                     mCalcGrid[newLocation].F = newG + heuristic;
+
+#if Draw_Calc_Node
+                    if(!calcNodeDic.ContainsKey(newLocation))
+                    {
+                        calcNode.X = newLocationX;
+                        calcNode.Y = newLocationY;
+                        calcNodeDic[newLocation] = calcNode;
+                    }
+#endif
 
                     mOpen.push(newLocation);
                     mCalcGrid[newLocation].Status = mOpenNodeValue;
@@ -196,14 +270,14 @@ public class PathFinder {
                 mCalcGrid[mLocation].Status = mCloseNodeValue;
             }
             
-#if DIAGNOSTIC
+#if Diagnostic
             sw.Stop();
             Debug.Log(sw.ElapsedTicks / 10000.0f);
 #endif
 
             if(mFound)
             {
-#if DIAGNOSTIC
+#if Diagnostic
                 sw.Reset();
                 sw.Start();
 #endif
@@ -238,7 +312,7 @@ public class PathFinder {
 
                 mClose.Add(fNode);
                 
-#if DIAGNOSTIC
+#if Diagnostic
                 sw.Stop();
                 Debug.Log(sw.ElapsedTicks / 10000.0f);
 #endif

@@ -1,4 +1,6 @@
 ﻿
+#define Draw_Calc_Node
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +29,12 @@ public class PlayerController : MonoBehaviour {
 
     public float speed = 12;
 
+    public HeuristicFormula pathFindFormula = HeuristicFormula.Manhattan;
+
+    public bool tieBreaker = false;
+
+    public bool punishChangeDirection = false;
+
     void Awake()
     {
         mSceneCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
@@ -40,6 +48,10 @@ public class PlayerController : MonoBehaviour {
     void Update()
     {
         costMilliseconds = 0;
+
+        pathFinder.formula = pathFindFormula;
+        pathFinder.tieBreaker = tieBreaker;
+        pathFinder.punishChangeDirection = punishChangeDirection;
     }
 
     void LateUpdate()
@@ -57,8 +69,21 @@ public class PlayerController : MonoBehaviour {
                 var sw = new Stopwatch();
                 sw.Start();
 
+#if Draw_Calc_Node
+                Dictionary<int, PathNode> calcNode = new Dictionary<int, PathNode>();
+                mPath = pathFinder.FindPath(cachedTransform.position, mDestination, ref calcNode);
+
+#if UNITY_EDITOR
+                gridModel.drawCalcNode(calcNode);
+#endif
+
+#else
                 mPath = pathFinder.FindPath(cachedTransform.position, mDestination);
+#endif
+
                 sw.Stop();
+
+                //if open define Draw_Calc_Node, the cost time is greater than truth.
                 costMilliseconds += sw.ElapsedTicks / 10000.0f;
 
                 if (null != mPath)

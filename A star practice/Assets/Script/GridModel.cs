@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿
+#define Draw_Calc_Node
+
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,6 +62,10 @@ public class GridModel : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             clearDrawPath();
+            
+#if Draw_Calc_Node
+            clearDrawCalcNode();
+#endif
         }
     }
 
@@ -104,6 +111,38 @@ public class GridModel : MonoBehaviour
 
         view.updateInfo();
     }
+
+#if Draw_Calc_Node
+    
+    List<int> drawCalcNodeList = new List<int>();
+
+    void clearDrawCalcNode()
+    {
+        for (int i = 0, max = drawCalcNodeList.Count; i < max; i++)
+        {
+            gridList[drawCalcNodeList[i]] = NodeState.Open;
+        }
+        drawCalcNodeList.Clear();
+    }
+
+    public void drawCalcNode(Dictionary<int, PathNode> pathDic)
+    {
+        PathNode node;
+        int index = 0;
+        foreach (var itr in pathDic)
+        {
+            node = itr.Value;
+            index = node.X * column + node.Y;
+            byte nodeDate = gridList[index];
+            if (nodeDate != NodeState.Block && nodeDate != NodeState.DrawPath && nodeDate != NodeState.DrawCalc)
+            {
+                gridList[index] = NodeState.DrawCalc;
+                drawCalcNodeList.Add(index);
+            }
+        }
+    }
+
+#endif
 
 #endif
 
