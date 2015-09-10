@@ -36,7 +36,7 @@ PathFinder
 		------??? target = CheckDenstination(origin, target);
 	}
 }
-100
+
 --advantage:
 >before find, check start equal target
 >self block and dynamic entity block
@@ -66,6 +66,7 @@ PathFinder
 ----scene camera controll                           -OVER
 ----sometime throw exception                        -OVER
 ----optimize algorithm                              -
+----draw calculated grid                            ------
 --optimize camera wheel drag                        -OVER
 --multiple player controll and path draw            -OVER
 --player move at path                               -OVER

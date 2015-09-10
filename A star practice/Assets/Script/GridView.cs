@@ -235,7 +235,7 @@ public class GridView : MonoBehaviour {
         drawGrid();
     }
 
-    public void updatePathFinderCost(long costTime)
+    public void updatePathFinderCost(float costTime)
     {
         mPathFinderCostTime.text = costTime.ToString() + " ms";
     }

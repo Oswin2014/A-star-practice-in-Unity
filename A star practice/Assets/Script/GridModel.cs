@@ -37,7 +37,9 @@ public class GridModel : MonoBehaviour
     [HideInInspector]
     int oldRow, oldColumn;
 
-    public float quadSize = 1.0f; 
+    public float quadSize = 1.0f;
+
+    public bool drawPathGrid = true;
 
     void Awake()
     {
@@ -83,7 +85,9 @@ public class GridModel : MonoBehaviour
 
     public void drawPath(List<PathNode> pathList)
     {
-        
+        if (!drawPathGrid)
+            return;
+
         PathNode node;
         int index = 0;
         for(int i = 0, max = pathList.Count; i < max; i++)

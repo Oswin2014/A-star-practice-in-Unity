@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 public class PlayerController : MonoBehaviour {
 
-    public static long costMilliseconds = 0;
+    public static float costMilliseconds = 0f;
 
     protected GameObject mGo;
     protected Transform mTrans;
@@ -58,12 +58,17 @@ public class PlayerController : MonoBehaviour {
                 sw.Start();
 
                 mPath = pathFinder.FindPath(cachedTransform.position, mDestination);
-                if (null != mPath)
-                    mPath.Reverse();
-
                 sw.Stop();
-                costMilliseconds += sw.ElapsedMilliseconds;
-                //UnityEngine.Debug.Log("cost:  " + sw.ElapsedMilliseconds);
+                costMilliseconds += sw.ElapsedTicks / 10000.0f;
+
+                if (null != mPath)
+                {
+                    mPath.Reverse();
+#if UNITY_EDITOR
+                    gridModel.drawPath(mPath);
+#endif
+                }
+
                 gridModel.view.updatePathFinderCost(costMilliseconds);
             }
         }
