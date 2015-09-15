@@ -105,9 +105,7 @@ public class PathFinder {
             mEndLocation = (end.y << mGridXBitWide) + end.x;
 
             mCalcGrid[mLocation].G = 0;
-            //TODO:
             mCalcGrid[mLocation].F = Math.Abs(start.x - end.x) + Math.Abs(start.y - end.y);
-
             mCalcGrid[mLocation].PX = (ushort)start.x;
             mCalcGrid[mLocation].PY = (ushort)start.y;
             mCalcGrid[mLocation].Status = mOpenNodeValue;

@@ -4,9 +4,19 @@
 --Note key point
 --design self pseudocode
 --understand two sample
---summarize
+--summarize												-||||||
+----GridControllerEditor                        		-OVER
+----byte                                        		-OVER
+----group find same target optimize keypoint Note       -OVER
+------找到离已有路径最短距离路径点,再以以点->目的地
+--------可在group中找到离目标点最小heuristic点,以此点为起点开始寻路
+--------以其它点到此点的G为上限,遍历已有路径找到最近距离点
+------保留本组所有寻路过程中计算的网格heuristic值
+------保留所有路径, group中其它点寻路如果寻到已有路径点上, 则直接取此交叉点到目标点的路径数据
+----GridModel                                           -OVER
+----MVC                                                 -OVER
 
->>understand 抢滩登陆团 A*:
+>>understand 1911 A*:
 
 PathFinderFast
 {

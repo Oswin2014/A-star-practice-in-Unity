@@ -20,9 +20,9 @@ public class GridControllerEditor : Editor
         if (0 == mState)
             return;
 
-        HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-
         int id = GUIUtility.GetControlID(FocusType.Passive);
+        HandleUtility.AddDefaultControl(id);
+
         EventType type = Event.current.GetTypeForControl(id);
 
         if ((type == EventType.MouseDown || type == EventType.MouseDrag) && Event.current.button == 0)
