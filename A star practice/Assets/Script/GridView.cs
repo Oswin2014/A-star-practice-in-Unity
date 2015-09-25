@@ -1,4 +1,5 @@
 ﻿
+#if UNITY_EDITOR
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -245,3 +246,5 @@ public class GridView : MonoBehaviour {
     }
 
 }
+
+#endif

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+#if UNITY_EDITOR
+
 public class DrawMeshData
 {
 
@@ -18,3 +20,5 @@ public class DrawMeshData
     public int triIndex;
 
 }
+
+#endif

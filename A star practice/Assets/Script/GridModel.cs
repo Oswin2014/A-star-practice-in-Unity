@@ -1,5 +1,5 @@
 ﻿
-#define Draw_Calc_Node
+//#define Draw_Calc_Node
 
 using UnityEngine;
 using System;
@@ -62,8 +62,8 @@ public class GridModel : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             clearDrawPath();
-            
-#if Draw_Calc_Node
+
+#if UNITY_EDITOR && Draw_Calc_Node
             clearDrawCalcNode();
 #endif
         }

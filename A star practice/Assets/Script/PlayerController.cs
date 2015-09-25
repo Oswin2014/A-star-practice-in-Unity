@@ -1,5 +1,5 @@
 ﻿
-#define Draw_Calc_Node
+//#define Draw_Calc_Node
 
 using UnityEngine;
 using System.Collections;
@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour {
         {
             RaycastHit hitInfo;
             Ray ray = mSceneCamera.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out hitInfo, 500, GenericHelper.GetLayerMask("Ground")))
+            if(Physics.Raycast(ray, out hitInfo, 50000, GenericHelper.GetLayerMask("Ground")))
             {
                 mDestination = hitInfo.point;
                 mDestination.y = cachedTransform.position.y;

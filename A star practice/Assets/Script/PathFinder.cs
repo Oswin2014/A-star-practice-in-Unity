@@ -1,5 +1,5 @@
 ﻿
-#define Draw_Calc_Node
+//#define Draw_Calc_Node
 
 //#define Diagnostic
 
@@ -67,10 +67,10 @@ public class PathFinder {
     }
 
     public List<PathNode> FindPath(Vector3 startPos, Vector3 endPos
-#if Draw_Calc_Node
+#if UNITY_EDITOR && Draw_Calc_Node
         , ref Dictionary<int, PathNode> calcNodeDic
 #endif
-        )
+)
     {
         lock(this)
         {
@@ -80,7 +80,7 @@ public class PathFinder {
             sw.Start();
 #endif
 
-#if Draw_Calc_Node
+#if UNITY_EDITOR && Draw_Calc_Node
             calcNodeDic.Clear();
             PathNode calcNode;
             calcNode.F = 0;
@@ -116,7 +116,7 @@ public class PathFinder {
             int newLocation = 0, horiz = 0;
             float newG = 0, heuristic = 0;
 
-            
+
 #if Diagnostic
             sw.Stop();
             Debug.Log(sw.ElapsedTicks / 10000.0f);
@@ -125,7 +125,7 @@ public class PathFinder {
             sw.Start();
 #endif
 
-            while(mOpen.count > 0 && !mStop)
+            while (mOpen.count > 0 && !mStop)
             {
                 mLocation = mOpen.pop();
 
@@ -251,7 +251,7 @@ public class PathFinder {
 
                     mCalcGrid[newLocation].F = newG + heuristic;
 
-#if Draw_Calc_Node
+#if UNITY_EDITOR && Draw_Calc_Node
                     if(!calcNodeDic.ContainsKey(newLocation))
                     {
                         calcNode.X = newLocationX;
